@@ -1,0 +1,115 @@
+# =============================================================================
+# Bird Sound Recognition — Git ignore rules
+# 提交到 GitHub 时排除大文件与可再生产物（权重、数据集、缓存等）
+# =============================================================================
+
+# ----- 数据集与原始音频（体积大，需自行下载/放置） -----
+train_audio/
+train.csv
+taxonomy.csv
+*.ogg
+*.wav
+*.flac
+*.mp3
+*.m4a
+*.aac
+
+# ----- 训练/推理产物（权重、集成模型、部署包） -----
+outputs/*
+!outputs/.gitkeep
+
+# 模型权重与序列化模型（防止散落在项目其他目录）
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.joblib
+*.pkl
+*.pickle
+*.h5
+*.onnx
+*.pb
+
+# 特征缓存与中间数组
+*.npz
+*.npy
+
+# ----- Python -----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+
+# 测试与类型检查缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ----- IDE / 编辑器 -----
+.idea/
+.vscode/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# ----- 操作系统 -----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ----- 日志与临时文件 -----
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+*~
+
+# ----- 本地诊断脚本输出（可选） -----
+scripts/_diag_*.out

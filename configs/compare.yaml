@@ -1,0 +1,103 @@
+# 完整对比配置（25种鸟，约8500训练样本，首次预计算特征约15-20分钟）
+# 课程项目推荐用 compare_fast.yaml（10种鸟，约30分钟全部跑完）
+project:
+  name: "鸟类声音识别-多模型对比"
+  seed: 42
+  device: "cuda"
+
+paths:
+  data_root: "."
+  train_csv: "train.csv"
+  taxonomy_csv: "taxonomy.csv"
+  audio_dir: "train_audio"
+  output_dir: "outputs"
+  features_dir: "outputs/features"
+  models_dir: "outputs/models"
+  logs_dir: "outputs/logs"
+  figures_dir: "outputs/figures"
+  cache_dir: "outputs/cache"
+
+data:
+  target_class: "Aves"
+  sample_rate: 32000
+  duration: 5.0
+  min_samples_per_class: 320      # 每类至少80个样本
+  top_n_species: 100              # 取样本最多的25种鸟（避免161类仅几百样本）
+  val_ratio: 0.15
+  test_ratio: 0.15
+  n_folds: 3
+  max_train_samples: null         # 不截断
+  max_val_samples: null
+
+features:
+  n_mfcc: 40
+  n_mels: 128
+  n_fft: 2048
+  hop_length: 512
+  fmin: 20
+  fmax: 16000
+  include_pitch: true
+  include_timbre: true
+  include_rate: true
+  fast_mode: true
+
+augmentation:
+  enabled: true
+  time_stretch: [0.9, 1.1]
+  pitch_shift: [-1, 1]
+  noise_snr: [20, 35]
+  spec_augment:
+    freq_mask: 12
+    time_mask: 24
+
+ml:
+  models: ["knn", "svm", "rf"]
+  knn_k: 5
+  svm_c: 10.0
+  rf_n_estimators: 200
+
+deep_learning:
+  batch_size: 32
+  model_batch_size:
+    crnn: 16
+    hybrid: 16
+    stitch: 16
+    transformer: 8
+    mamba: 16
+  model_val_batch_size:
+    crnn: 16
+    hybrid: 16
+    stitch: 16
+    transformer: 8
+    mamba: 16
+  data_on_gpu: false
+  num_workers: 0
+  epochs: 20
+  model_epochs:
+    hybrid: 50
+    stitch: 50
+    mamba: 20
+    transformer: 20
+  lr: 0.0003
+  model_lr:
+    crnn: 0.0003
+    hybrid: 0.0003
+    stitch: 0.0002
+    transformer: 0.0002
+    mamba: 0.0002
+  weight_decay: 0.0001
+  label_smoothing: 0.05
+  focal_gamma: 0
+  early_stop_patience: 8
+  model_early_stop:
+    hybrid: 15
+    stitch: 15
+    mamba: 10
+    transformer: 10
+  use_amp: true
+  no_amp_models: ["mamba", "stitch"]
+  models: ["cnn", "crnn", "transformer", "mamba", "hybrid", "stitch"]
+
+inference:
+  top_k: 5
+  confidence_threshold: 0.3

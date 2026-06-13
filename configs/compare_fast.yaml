@@ -1,0 +1,106 @@
+# 快速对比配置 — 推荐课程项目使用，约30分钟内完成
+project:
+  name: "鸟类声音识别-快速对比"
+  seed: 42
+  device: "cuda"
+
+paths:
+  data_root: "."
+  train_csv: "train.csv"
+  taxonomy_csv: "taxonomy.csv"
+  audio_dir: "train_audio"
+  output_dir: "outputs"
+  features_dir: "outputs/features"
+  models_dir: "outputs/models"
+  logs_dir: "outputs/logs"
+  figures_dir: "outputs/figures"
+  cache_dir: "outputs/cache"
+
+data:
+  target_class: "Aves"
+  sample_rate: 32000
+  duration: 5.0
+  min_samples_per_class: 80
+  top_n_species: 10              # 只用样本最多的10种鸟
+  val_ratio: 0.15
+  test_ratio: 0.15
+  n_folds: 2                    # 2折交叉验证，减少等待
+  max_train_samples: null
+  max_val_samples: null
+
+features:
+  n_mfcc: 40
+  n_mels: 128
+  n_fft: 2048
+  hop_length: 512
+  fmin: 20
+  fmax: 16000
+  include_pitch: true
+  include_timbre: true
+  include_rate: true
+  fast_mode: true
+
+augmentation:
+  enabled: false                 # 关闭增强，加速训练
+  time_stretch: [0.9, 1.1]
+  pitch_shift: [-1, 1]
+  noise_snr: [20, 35]
+  spec_augment:
+    freq_mask: 12
+    time_mask: 24
+
+ml:
+  models: ["knn", "svm", "rf"]
+  knn_k: 5
+  svm_c: 10.0
+  svm_probability: false
+  rf_n_estimators: 100
+
+deep_learning:
+  batch_size: 32
+  model_batch_size:
+    crnn: 16
+    hybrid: 16
+    stitch: 16
+    transformer: 8
+    mamba: 16
+  model_val_batch_size:
+    crnn: 16
+    hybrid: 16
+    stitch: 16
+    transformer: 8
+    mamba: 16
+  data_on_gpu: false
+  num_workers: 0
+  epochs: 15
+  model_epochs:
+    cnn: 20
+    crnn: 20
+    hybrid: 20
+    stitch: 20
+    transformer: 20
+    mamba: 20
+  lr: 0.0003
+  model_lr:
+    crnn: 0.0003
+    hybrid: 0.0003
+    stitch: 0.0002
+    transformer: 0.0002
+    mamba: 0.0002
+  weight_decay: 0.0001
+  label_smoothing: 0.05
+  focal_gamma: 0
+  early_stop_patience: 8
+  model_early_stop:
+    crnn: 10
+    hybrid: 10
+    stitch: 10
+    transformer: 10
+    mamba: 10
+  use_amp: true
+  no_amp_models: ["mamba", "stitch"]
+  models: ["cnn", "crnn", "hybrid", "stitch", "transformer", "mamba"]
+
+inference:
+  top_k: 5
+  confidence_threshold: 0.3

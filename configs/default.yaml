@@ -1,0 +1,67 @@
+# BirdCLEF2026 鸟类识别系统 - 默认配置
+project:
+  name: "BirdSoundRecognition"
+  seed: 42
+  device: "cuda"  # cuda / cpu
+
+paths:
+  data_root: "."
+  train_csv: "train.csv"
+  taxonomy_csv: "taxonomy.csv"
+  audio_dir: "train_audio"
+  output_dir: "outputs"
+  features_dir: "outputs/features"
+  models_dir: "outputs/models"
+  logs_dir: "outputs/logs"
+
+data:
+  target_class: "Aves"          # 仅鸟类分类
+  sample_rate: 32000
+  duration: 5.0                 # 固定音频长度(秒)
+  min_samples_per_class: 5      # 过滤样本过少的类别
+  val_ratio: 0.15
+  test_ratio: 0.15
+  n_folds: 5                      # 交叉验证折数
+
+features:
+  n_mfcc: 40
+  n_mels: 128
+  n_fft: 2048
+  hop_length: 512
+  fmin: 20
+  fmax: 16000
+  include_pitch: true
+  include_timbre: true
+  include_rate: true
+
+augmentation:
+  enabled: true
+  time_stretch: [0.85, 1.15]
+  pitch_shift: [-2, 2]
+  noise_snr: [15, 30]
+  spec_augment:
+    freq_mask: 16
+    time_mask: 32
+
+ml:
+  models: ["knn", "svm", "rf"]
+  knn_k: 5
+  svm_c: 10.0
+  rf_n_estimators: 300
+
+deep_learning:
+  batch_size: 32
+  num_workers: 0
+  epochs: 50
+  lr: 0.0003
+  weight_decay: 0.0001
+  label_smoothing: 0.1
+  focal_gamma: 2.0
+  early_stop_patience: 10
+  models: ["cnn", "crnn", "transformer", "mamba"]
+  # 快速调试时可设小值
+  max_train_samples: null       # null=全部数据
+
+inference:
+  top_k: 5
+  confidence_threshold: 0.3
