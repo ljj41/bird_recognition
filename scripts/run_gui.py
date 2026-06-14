@@ -25,6 +25,10 @@ sys.path.insert(0, str(ROOT))
 
 import setup_console  # noqa: F401
 
+from gui.mpl_fonts import setup_chinese_matplotlib
+
+setup_chinese_matplotlib()
+
 
 def parse_args():
     p = argparse.ArgumentParser(description="启动鸟类声音识别 GUI")
