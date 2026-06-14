@@ -40,6 +40,10 @@ except ImportError:
 
 from matplotlib.figure import Figure
 
+from .mpl_fonts import setup_chinese_matplotlib
+
+setup_chinese_matplotlib()
+
 
 class DropZone(QFrame):
     fileDropped = Signal(str)
@@ -95,6 +99,7 @@ class DropZone(QFrame):
 
 class MplCanvas(FigureCanvas):
     def __init__(self, width=5, height=2.2, dpi=100):
+        setup_chinese_matplotlib()
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         self.fig.patch.set_alpha(0.0)
         super().__init__(self.fig)
